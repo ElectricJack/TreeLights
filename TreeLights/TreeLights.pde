@@ -43,7 +43,7 @@ void draw()
 
     List<Strip> strips = registry.getStrips();
     
-    color white = color(#FFDFAA);
+    color white = color(#816E56);
 
     for(int stripIdx = 0; stripIdx < strips.size(); ++stripIdx) {
       Strip strip = strips.get(stripIdx);      
