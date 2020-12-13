@@ -59,9 +59,9 @@ void draw()
         //else
         //  strip.setPixel(color(0,0,0), i);
         float ang = totalCount * 0.01 + time;
-        int r = (int)(sin(ang) * 128+255);
-        int g = (int)(sin(ang*2) * 128+255);
-        int b = (int)(sin(ang*3) * 128+255);
+        int r = (int)(sin(ang) * 128+128);
+        int g = (int)(sin(ang*2) * 128+128);
+        int b = (int)(sin(ang*3) * 128+128);
         
         strip.setPixel(color(r,g,b), i);
           
