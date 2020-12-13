@@ -39,7 +39,7 @@ void draw()
       registry.startPushing();
       registry.setExtraDelay(0);
       registry.setAutoThrottle(true);
-      registry.setAntiLog(true);
+      registry.setAntiLog(false);
       ledInitialized = true;
     }
 
