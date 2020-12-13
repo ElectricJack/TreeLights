@@ -29,6 +29,7 @@ void setup()
   frameRate(30);
 }
 
+int pixelId = 0;
 void draw()
 {
   if (ledObserver.hasStrips)
@@ -45,11 +46,21 @@ void draw()
     
     color white = color(#7E4800);
 
+    ++pixelId;
+    int totalCount = 0;
     for(int stripIdx = 0; stripIdx < strips.size(); ++stripIdx) {
       Strip strip = strips.get(stripIdx);      
       for (int i=0; i<strip.getLength(); ++i) {
-        strip.setPixel(white, i);
+        if(pixelId == totalCount) 
+          strip.setPixel(white, i);
+        else
+          strip.setPixel(color(0,0,0), i);
+          
+        ++totalCount;
       }
     }
+    
+    if (pixelId >= totalCount)
+      pixelId = -1;
   }
 }
