@@ -48,7 +48,8 @@ void draw()
 
     ++pixelId;
     int totalCount = 0;
-    for(int stripIdx = 0; stripIdx < strips.size(); ++stripIdx) {
+    int stripCount = min(strips.size(), 2);
+    for(int stripIdx = 0; stripIdx < stripCount; ++stripIdx) {
       Strip strip = strips.get(stripIdx);      
       for (int i=0; i<strip.getLength(); ++i) {
         if(pixelId == totalCount) 
