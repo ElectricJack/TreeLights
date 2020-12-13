@@ -37,13 +37,13 @@ void draw()
       registry.startPushing();
       registry.setExtraDelay(0);
       registry.setAutoThrottle(true);
-      registry.setAntiLog(true);
+      registry.setAntiLog(false);
       ledInitialized = true;
     }
 
     List<Strip> strips = registry.getStrips();
     
-    color white = color(#816E56);
+    color white = color(#7E4800);
 
     for(int stripIdx = 0; stripIdx < strips.size(); ++stripIdx) {
       Strip strip = strips.get(stripIdx);      
