@@ -45,7 +45,7 @@ void draw()
 
     List<Strip> strips = registry.getStrips();
     
-    color white = color(#B78A43);
+    color white = color(#B77E23);
 
     time += 0.05f;
     ++pixelId;
