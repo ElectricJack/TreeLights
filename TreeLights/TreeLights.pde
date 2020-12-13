@@ -45,7 +45,7 @@ void draw()
 
     List<Strip> strips = registry.getStrips();
     
-    color white = color(#7E4800);
+    color white = color(#B78A43);
 
     time += 0.05f;
     ++pixelId;
@@ -55,15 +55,15 @@ void draw()
       Strip strip = strips.get(stripIdx);      
       for (int i=0; i<strip.getLength(); ++i) {
         //if(pixelId == totalCount) 
-        //  strip.setPixel(white, i);
+        strip.setPixel(white, i);
         //else
         //  strip.setPixel(color(0,0,0), i);
-        float ang = totalCount * 0.01 + time;
-        int r = (int)(sin(ang) * 128+128);
-        int g = (int)(sin(ang*2) * 128+128);
-        int b = (int)(sin(ang*3) * 128+128);
+        //float ang = totalCount * 0.01 + time;
+        //int r = (int)(sin(ang) * 128+128);
+        //int g = (int)(sin(ang*2) * 128+128);
+        //int b = (int)(sin(ang*3) * 128+128);
         
-        strip.setPixel(color(r,g,b), i);
+        //strip.setPixel(color(r,g,b), i);
           
         ++totalCount;
       }
