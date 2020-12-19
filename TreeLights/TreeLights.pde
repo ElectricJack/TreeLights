@@ -1,5 +1,6 @@
+import netP5.*;
+import oscP5.*;
 
-//import netP5.*;
 import java.util.*;
 import com.heroicrobot.dropbit.registry.*;
 import com.heroicrobot.dropbit.devices.pixelpusher.*;
@@ -16,15 +17,18 @@ class LEDObserver implements Observer {
 }
 
 boolean ledInitialized = false;
-
+OscP5   oscP5 = null;
 
 void setup()
 {
   size(100,100,P3D);
   
+  oscP5            = new OscP5(this,12000);
   registry         = new DeviceRegistry();
   ledObserver      = new LEDObserver();
   registry.addObserver(ledObserver);
+  
+
   
   frameRate(30);
 }
@@ -45,7 +49,7 @@ void draw()
 
     List<Strip> strips = registry.getStrips();
     
-    color white = color(#C17542);
+    //color white = color(#C17542);
 
     time += 0.05f;
     ++pixelId;
@@ -55,7 +59,7 @@ void draw()
       Strip strip = strips.get(stripIdx);      
       for (int i=0; i<strip.getLength(); ++i) {
         //if(pixelId == totalCount) 
-        strip.setPixel(white, i);
+        strip.setPixel(treeBaseColor, i);
         //else
         //  strip.setPixel(color(0,0,0), i);
         //float ang = totalCount * 0.01 + time;
@@ -72,4 +76,19 @@ void draw()
     if (pixelId >= totalCount)
       pixelId = -1;
   }
+}
+
+float masterR, masterG, masterB;
+color treeBaseColor;
+
+void updateCol() {
+  treeBaseColor = color(masterR*255, masterG*255, masterB*255);
+}
+
+void oscEvent(OscMessage msg) {
+  String msgPattern = msg.addrPattern();
+  println(msgPattern);
+  if      (msgPattern.equals("/master/red"))   { masterR = msg.get(0).floatValue(); updateCol(); }
+  else if (msgPattern.equals("/master/green")) { masterR = msg.get(0).floatValue(); updateCol(); }
+  else if (msgPattern.equals("/master/blue"))  { masterR = msg.get(0).floatValue(); updateCol(); }
 }
