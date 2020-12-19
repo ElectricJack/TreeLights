@@ -79,7 +79,7 @@ void draw()
 }
 
 float masterR, masterG, masterB;
-color treeBaseColor;
+color treeBaseColor = color(255,255,255);
 
 void updateCol() {
   treeBaseColor = color(masterR*255, masterG*255, masterB*255);
