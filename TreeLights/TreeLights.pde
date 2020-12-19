@@ -76,7 +76,15 @@ void draw()
           if (random(0,1) < 0.001f)
             strip.setPixel(treeData.treeSparkleColor, i);
           else
-            strip.setPixel(treeData.treeBaseColor, i);
+          {
+            float b = treeData.brightness;
+            
+            color c = color(red(treeData.treeBaseColor) * b,
+                            green(treeData.treeBaseColor) * b,
+                            blue(treeData.treeBaseColor) * b);
+            
+            strip.setPixel(c, i);
+          }
         }
         else
         {
@@ -109,10 +117,11 @@ public static class TreeData implements Serializable
   public int treeColorA;
   public int treeColorB;
   public int treeColorC;
-  
+  public float brightness = 1.0f;
   public boolean treeOn;
 }
 
+String fileDataPath;
 TreeData treeData = new TreeData();
 float masterR, masterG, masterB;
 int activeColorIndex = 0;
@@ -133,7 +142,7 @@ void updateCol() {
 // Turn off at time, turn on at time
 // Sparkle
 
-String fileDataPath;
+
 
 void loadValues()
 {
@@ -164,6 +173,7 @@ void oscEvent(OscMessage msg) {
   if      (msgPattern.equals("/master/red"))   { masterR = msg.get(0).floatValue(); updateCol(); }
   else if (msgPattern.equals("/master/green")) { masterG = msg.get(0).floatValue(); updateCol(); }
   else if (msgPattern.equals("/master/blue"))  { masterB = msg.get(0).floatValue(); updateCol(); }
+  else if (msgPattern.equals("/master/blue"))  { treeData.brightness = msg.get(0).floatValue(); saveValues(); }
   else if (msgPattern.equals("/fx/a/fx"))  {
     int index = (int)msg.get(0).floatValue();
     if (index <= 4) activeColorIndex = index;
@@ -171,7 +181,6 @@ void oscEvent(OscMessage msg) {
       treeData.treeOn = !treeData.treeOn;
       saveValues();
     }
-    
   } 
 
 }
