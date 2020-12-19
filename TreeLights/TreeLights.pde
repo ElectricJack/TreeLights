@@ -67,8 +67,12 @@ void draw()
     for(int stripIdx = 0; stripIdx < stripCount; ++stripIdx) {
       Strip strip = strips.get(stripIdx);      
       for (int i=0; i<strip.getLength(); ++i) {
-        //if(pixelId == totalCount) 
-        strip.setPixel(treeData.treeBaseColor, i);
+        //if(pixelId == totalCount)
+        
+        if (random(0,1) < 0.01f)
+          strip.setPixel(treeData.treeSparkleColor, i);
+        else
+          strip.setPixel(treeData.treeBaseColor, i);
         //else
         //  strip.setPixel(color(0,0,0), i);
         //float ang = totalCount * 0.01 + time;
