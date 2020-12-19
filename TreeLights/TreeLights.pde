@@ -69,7 +69,7 @@ void draw()
       for (int i=0; i<strip.getLength(); ++i) {
         //if(pixelId == totalCount)
         
-        if (random(0,1) < 0.01f)
+        if (random(0,1) < 0.001f)
           strip.setPixel(treeData.treeSparkleColor, i);
         else
           strip.setPixel(treeData.treeBaseColor, i);
