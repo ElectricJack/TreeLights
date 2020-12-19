@@ -92,7 +92,7 @@ void oscEvent(OscMessage msg) {
   else if (msgPattern.equals("/master/green")) { masterG = msg.get(0).floatValue(); updateCol(); }
   else if (msgPattern.equals("/master/blue"))  { masterB = msg.get(0).floatValue(); updateCol(); }
   else if (msgPattern.equals("/fx/a/fx"))  {
-    println(msg.get(0).intValue());
+    println(msg.get(0));
   } 
 
 }
