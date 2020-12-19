@@ -173,7 +173,7 @@ void oscEvent(OscMessage msg) {
   if      (msgPattern.equals("/master/red"))   { masterR = msg.get(0).floatValue(); updateCol(); }
   else if (msgPattern.equals("/master/green")) { masterG = msg.get(0).floatValue(); updateCol(); }
   else if (msgPattern.equals("/master/blue"))  { masterB = msg.get(0).floatValue(); updateCol(); }
-  else if (msgPattern.equals("/master/blue"))  { treeData.brightness = msg.get(0).floatValue(); saveValues(); }
+  else if (msgPattern.equals("/master/level")) { treeData.brightness = msg.get(0).floatValue(); saveValues(); }
   else if (msgPattern.equals("/fx/a/fx"))  {
     int index = (int)msg.get(0).floatValue();
     if (index <= 4) activeColorIndex = index;
