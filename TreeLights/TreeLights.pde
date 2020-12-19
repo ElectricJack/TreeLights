@@ -167,7 +167,7 @@ void oscEvent(OscMessage msg) {
   else if (msgPattern.equals("/fx/a/fx"))  {
     int index = (int)msg.get(0).floatValue();
     if (index <= 4) activeColorIndex = index;
-    else if(index == 5) {
+    else if(index == 17) {
       treeData.treeOn = !treeData.treeOn;
       saveValues();
     }
