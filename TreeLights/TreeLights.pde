@@ -38,6 +38,8 @@ void setup()
   ledObserver      = new LEDObserver();
   registry.addObserver(ledObserver);
   
+  fileDataPath = sketchPath("values.dat");
+  println(fileDataPath);
   loadValues();
   
   frameRate(30);
@@ -120,7 +122,7 @@ void updateCol() {
 // Turn off at time, turn on at time
 // Sparkle
 
-String fileDataPath = sketchPath("values.dat");
+String fileDataPath;
 
 void loadValues()
 {
@@ -139,7 +141,10 @@ void saveValues()
       ObjectOutputStream objectOutputStream = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(fileDataPath)));
       objectOutputStream.writeObject(treeData);
       objectOutputStream.close();
-    } catch(IOException e) {}
+    } catch(IOException e) {
+      println("Saving failed");
+      println(e);
+    }
 }
 
 void oscEvent(OscMessage msg) {
