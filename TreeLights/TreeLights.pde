@@ -1,3 +1,8 @@
+// To run at startup
+// sudo nano ~/.config/lxsession/LXDE-pi/autostart
+// add: /home/pi/processing-3.5.3/processing-java --sketch=/home/pi/TreeLights/TreeLights --present
+
+
 import netP5.*;
 import oscP5.*;
 
@@ -55,7 +60,7 @@ void draw()
       registry.startPushing();
       registry.setExtraDelay(0);
       registry.setAutoThrottle(true);
-      registry.setAntiLog(false);
+      registry.setAntiLog(true);
       ledInitialized = true;
     }
 
@@ -73,10 +78,9 @@ void draw()
         
         if (treeData.treeOn)
         {
-          if (random(0,1) < 0.001f)
+          if (random(0,1) < 0.001f) {
             strip.setPixel(treeData.treeSparkleColor, i);
-          else
-          {
+          } else {
             float b = treeData.brightness;
             
             color c = color(red(treeData.treeBaseColor) * b,
@@ -112,12 +116,12 @@ public static class TreeData implements Serializable
 {
   private static final long serialVersionUID = 1L;
   
-  public int treeBaseColor;
-  public int treeSparkleColor;
-  public int treeColorA;
-  public int treeColorB;
-  public int treeColorC;
-  public float brightness = 1.0f;
+  public int     treeBaseColor;
+  public int     treeSparkleColor;
+  public int     treeColorA;
+  public int     treeColorB;
+  public int     treeColorC;
+  public float   brightness = 1.0f;
   public boolean treeOn;
 }
 
@@ -177,10 +181,9 @@ void oscEvent(OscMessage msg) {
   else if (msgPattern.equals("/fx/a/fx"))  {
     int index = (int)msg.get(0).floatValue();
     if (index <= 4) activeColorIndex = index;
-    else if(index == 17) {
+    else if (index == 17) {
       treeData.treeOn = !treeData.treeOn;
       saveValues();
     }
-  } 
-
+  }
 }
