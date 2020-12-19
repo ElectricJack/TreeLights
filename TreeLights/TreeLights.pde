@@ -95,11 +95,11 @@ void draw()
 
 class TreeData implements Serializable
 {
-  color treeBaseColor     = color(#C17542);
-  color treeSparkleColor  = color(255,255,255);
-  color treeColorA        = color(255,0,0);
-  color treeColorB        = color(0,255,0);
-  color treeColorC        = color(0,0,255);
+  int treeBaseColor     = color(#C17542);
+  int treeSparkleColor  = color(255,255,255);
+  int treeColorA        = color(255,0,0);
+  int treeColorB        = color(0,255,0);
+  int treeColorC        = color(0,0,255);
 }
 
 TreeData treeData = new TreeData();
