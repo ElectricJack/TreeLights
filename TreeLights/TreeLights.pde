@@ -89,6 +89,6 @@ void oscEvent(OscMessage msg) {
   String msgPattern = msg.addrPattern();
   println(msgPattern);
   if      (msgPattern.equals("/master/red"))   { masterR = msg.get(0).floatValue(); updateCol(); }
-  else if (msgPattern.equals("/master/green")) { masterR = msg.get(0).floatValue(); updateCol(); }
-  else if (msgPattern.equals("/master/blue"))  { masterR = msg.get(0).floatValue(); updateCol(); }
+  else if (msgPattern.equals("/master/green")) { masterG = msg.get(0).floatValue(); updateCol(); }
+  else if (msgPattern.equals("/master/blue"))  { masterB = msg.get(0).floatValue(); updateCol(); }
 }
