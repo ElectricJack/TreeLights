@@ -71,17 +71,24 @@ void draw()
       for (int i=0; i<strip.getLength(); ++i) {
         //if(pixelId == totalCount)
         
-        if (random(0,1) < 0.001f)
-          strip.setPixel(treeData.treeSparkleColor, i);
+        if (treeData.treeOn)
+        {
+          if (random(0,1) < 0.001f)
+            strip.setPixel(treeData.treeSparkleColor, i);
+          else
+            strip.setPixel(treeData.treeBaseColor, i);
+        }
         else
-          strip.setPixel(treeData.treeBaseColor, i);
+        {
+          strip.setPixel(color(0,0,0), i);
+        }
+        
         //else
         //  strip.setPixel(color(0,0,0), i);
         //float ang = totalCount * 0.01 + time;
         //int r = (int)(sin(ang) * 128+128);
         //int g = (int)(sin(ang*2) * 128+128);
         //int b = (int)(sin(ang*3) * 128+128);
-        
         //strip.setPixel(color(r,g,b), i);
           
         ++totalCount;
@@ -102,6 +109,8 @@ public static class TreeData implements Serializable
   public int treeColorA;
   public int treeColorB;
   public int treeColorC;
+  
+  public boolean treeOn;
 }
 
 TreeData treeData = new TreeData();
@@ -158,6 +167,11 @@ void oscEvent(OscMessage msg) {
   else if (msgPattern.equals("/fx/a/fx"))  {
     int index = (int)msg.get(0).floatValue();
     if (index <= 4) activeColorIndex = index;
+    else if(index == 5) {
+      treeData.treeOn = !treeData.treeOn;
+      saveValues();
+    }
+    
   } 
 
 }
