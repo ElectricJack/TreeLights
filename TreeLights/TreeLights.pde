@@ -97,11 +97,11 @@ public static class TreeData implements Serializable
 {
   private static final long serialVersionUID = 1L;
   
-  public int treeBaseColor     = color(#C17542);
-  public int treeSparkleColor  = color(255,255,255);
-  public int treeColorA        = color(255,0,0);
-  public int treeColorB        = color(0,255,0);
-  public int treeColorC        = color(0,0,255);
+  public int treeBaseColor;
+  public int treeSparkleColor;
+  public int treeColorA;
+  public int treeColorB;
+  public int treeColorC;
 }
 
 TreeData treeData = new TreeData();
