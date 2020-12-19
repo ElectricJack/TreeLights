@@ -5,6 +5,16 @@ import java.util.*;
 import com.heroicrobot.dropbit.registry.*;
 import com.heroicrobot.dropbit.devices.pixelpusher.*;
 
+import java.io.Serializable;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
+
 // Pixel pusher -----------
 DeviceRegistry registry;
 LEDObserver    ledObserver;
@@ -28,7 +38,7 @@ void setup()
   ledObserver      = new LEDObserver();
   registry.addObserver(ledObserver);
   
-
+  loadValues();
   
   frameRate(30);
 }
@@ -49,7 +59,6 @@ void draw()
 
     List<Strip> strips = registry.getStrips();
     
-    //color white = color(#C17542);
 
     time += 0.05f;
     ++pixelId;
@@ -59,7 +68,7 @@ void draw()
       Strip strip = strips.get(stripIdx);      
       for (int i=0; i<strip.getLength(); ++i) {
         //if(pixelId == totalCount) 
-        strip.setPixel(treeBaseColor, i);
+        strip.setPixel(treeData.treeBaseColor, i);
         //else
         //  strip.setPixel(color(0,0,0), i);
         //float ang = totalCount * 0.01 + time;
@@ -78,11 +87,55 @@ void draw()
   }
 }
 
+class TreeData implements Serializable
+{
+  color treeBaseColor     = color(#C17542);
+  color treeSparkleColor  = color(255,255,255);
+  color treeColorA        = color(255,0,0);
+  color treeColorB        = color(0,255,0);
+  color treeColorC        = color(0,0,255);
+}
+
+TreeData treeData = new TreeData();
 float masterR, masterG, masterB;
-color treeBaseColor = color(255,255,255);
+int activeColorIndex = 0;
 
 void updateCol() {
-  treeBaseColor = color(masterR*255, masterG*255, masterB*255);
+  color col = color(masterR*255, masterG*255, masterB*255);
+  
+  if      (activeColorIndex == 0) treeData.treeBaseColor    = col;
+  else if (activeColorIndex == 1) treeData.treeSparkleColor = col;
+  else if (activeColorIndex == 2) treeData.treeColorA       = col;
+  else if (activeColorIndex == 3) treeData.treeColorB       = col;
+  else if (activeColorIndex == 4) treeData.treeColorC       = col;
+  
+  saveValues();
+}
+
+// Turn tree off, turn tree on
+// Turn off at time, turn on at time
+// Sparkle
+
+String fileDataPath = sketchPath("values.dat");
+
+void loadValues()
+{
+  if (!new File(fileDataPath).exists())
+    return;
+    
+  try {
+    ObjectInputStream objectInputStream = new ObjectInputStream(new BufferedInputStream(new FileInputStream(fileDataPath)));
+    treeData = (TreeData)objectInputStream.readObject();
+    objectInputStream.close();
+  } catch( Exception e ) {}
+}
+void saveValues()
+{
+    try {
+      ObjectOutputStream objectOutputStream = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(fileDataPath)));
+      objectOutputStream.writeObject(treeData);
+      objectOutputStream.close();
+    } catch(IOException e) {}
 }
 
 void oscEvent(OscMessage msg) {
@@ -92,7 +145,8 @@ void oscEvent(OscMessage msg) {
   else if (msgPattern.equals("/master/green")) { masterG = msg.get(0).floatValue(); updateCol(); }
   else if (msgPattern.equals("/master/blue"))  { masterB = msg.get(0).floatValue(); updateCol(); }
   else if (msgPattern.equals("/fx/a/fx"))  {
-    println(msg.get(0).floatValue());
+    int index = (int)msg.get(0).floatValue();
+    if (index <= 4) activeColorIndex = index;
   } 
 
 }
