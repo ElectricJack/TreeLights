@@ -102,7 +102,7 @@ int startFrame = -1;
 void calibrationBehavior(Strip strip, int i, int globalIdx)
 {
   
-  if (frameCount % 450 == 0) {             // Every 15 seconds (30fps * 15 = 450)
+  if (frameCount % 1800 == 0) {            // Every 60 seconds (30fps * 60 = 1800)
     startFrame = frameCount + 60;          // Delay 2 seconds
     strip.setPixel(color(255,255,255), i); // Set all pixels to white
     pixelId = 0;                           // Reset the pixel ID
