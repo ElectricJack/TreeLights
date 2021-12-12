@@ -110,7 +110,7 @@ void calibrationBehavior(Strip strip, int i, int globalIdx)
 
   if (frameCount >= startFrame)
   {
-    bool clearBetween = frameCount % 4 == 3;
+    boolean clearBetween = frameCount % 4 == 3;
     if (pixelId == globalIdx && !clearBetween)
       strip.setPixel(color(255,255,255), i);
     else
