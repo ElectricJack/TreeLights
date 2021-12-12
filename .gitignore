@@ -8,3 +8,6 @@ application.windows32
 application.windows64
 application.macosx
 out
+*.log
+TreeLights/values.dat
+values.dat
