@@ -96,10 +96,22 @@ void updateStrips(List<Strip> strips)
      pixelId = -1;
 }
 
+
+
+int startFrame = -1;
 void calibrationBehavior(Strip strip, int i, int globalIdx)
 {
-  if (pixelId == globalIdx) strip.setPixel(color(255,255,255), i);
-  else                      strip.setPixel(color(0,0,0), i);
+  
+  if (frameCount % 450 == 0) {             // Every 15 seconds (30fps * 15 = 450)
+    startFrame = frameCount + 60;          // Delay 2 seconds
+    strip.setPixel(color(255,255,255), i); // Set all pixels to white
+  }
+
+  if (frameCount >= startFrame)
+  {
+    if (pixelId == globalIdx) strip.setPixel(color(255,255,255), i);
+    else                      strip.setPixel(color(0,0,0), i);
+  }   
 }
 
 void defaultBehavior(Strip strip, int i)
