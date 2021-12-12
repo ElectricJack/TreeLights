@@ -111,7 +111,7 @@ void calibrationBehavior(Strip strip, int i, int globalIdx)
   {
     if (pixelId == globalIdx) strip.setPixel(color(255,255,255), i);
     else                      strip.setPixel(color(0,0,0), i);
-  }   
+  }
 }
 
 void defaultBehavior(Strip strip, int i)
