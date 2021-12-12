@@ -2,7 +2,7 @@
 pids=$(pgrep -f processing)
 for pid in "${pids}"; do
 	if [[ $pid != $$ ]]; then
-		echo "$pid"
+		kill -s TERM "$pid"
 	fi
 done
 
