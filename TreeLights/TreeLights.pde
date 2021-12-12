@@ -92,8 +92,8 @@ void updateStrips(List<Strip> strips)
     }
   }
 
-  if (pixelId >= totalCount)
-     pixelId = -1;
+  //if (pixelId >= totalCount)
+  //   pixelId = -1;
 }
 
 
@@ -105,6 +105,7 @@ void calibrationBehavior(Strip strip, int i, int globalIdx)
   if (frameCount % 450 == 0) {             // Every 15 seconds (30fps * 15 = 450)
     startFrame = frameCount + 60;          // Delay 2 seconds
     strip.setPixel(color(255,255,255), i); // Set all pixels to white
+    pixelId = 0;                           // Reset the pixel ID
   }
 
   if (frameCount >= startFrame)
