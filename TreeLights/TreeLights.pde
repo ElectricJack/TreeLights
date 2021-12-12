@@ -80,7 +80,6 @@ void updateStrips(List<Strip> strips)
   int totalCount = 0;
   int stripCount = min(strips.size(), 2);
 
-  ++pixelId;
   
   for(int stripIdx = 0; stripIdx < stripCount; ++stripIdx) {
     Strip strip = strips.get(stripIdx);      
@@ -91,9 +90,6 @@ void updateStrips(List<Strip> strips)
       ++totalCount;
     }
   }
-
-  //if (pixelId >= totalCount)
-  //   pixelId = -1;
 }
 
 
@@ -112,6 +108,8 @@ void calibrationBehavior(Strip strip, int i, int globalIdx)
   {
     if (pixelId == globalIdx) strip.setPixel(color(255,255,255), i);
     else                      strip.setPixel(color(0,0,0), i);
+
+    ++pixelId;
   }
 }
 
