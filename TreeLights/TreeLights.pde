@@ -90,6 +90,9 @@ void updateStrips(List<Strip> strips)
       ++totalCount;
     }
   }
+
+  if (frameCount >= startFrame)
+    ++pixelId;
 }
 
 
@@ -108,8 +111,6 @@ void calibrationBehavior(Strip strip, int i, int globalIdx)
   {
     if (pixelId == globalIdx) strip.setPixel(color(255,255,255), i);
     else                      strip.setPixel(color(0,0,0), i);
-
-    ++pixelId;
   }
 }
 
