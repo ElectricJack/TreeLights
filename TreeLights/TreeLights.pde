@@ -98,7 +98,7 @@ void updateStrips(List<Strip> strips)
 
 void calibrationBehavior(Strip strip, int i, int globalIdx)
 {
-  if (pixelId == globalIdx) strip.setPixel(color(1,1,1), i);
+  if (pixelId == globalIdx) strip.setPixel(color(255,255,255), i);
   else                      strip.setPixel(color(0,0,0), i);
 }
 
