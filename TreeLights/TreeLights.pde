@@ -91,7 +91,8 @@ void updateStrips(List<Strip> strips)
     }
   }
 
-  if (frameCount >= startFrame)
+  // Once started only switch pixels every 4 frames.
+  if (frameCount >= startFrame && frameCount % 4 == 0)
     ++pixelId;
 }
 
