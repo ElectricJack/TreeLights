@@ -50,67 +50,79 @@ void setup()
   frameRate(30);
 }
 
-int pixelId = 0;
-float time = 0;
+
+
 void draw()
 {
-  if (ledObserver.hasStrips)
+  if (!ledObserver.hasStrips)
+    return;
+  
+  if (!ledInitialized) {
+    registry.startPushing();
+    registry.setExtraDelay(0);
+    registry.setAutoThrottle(true);
+    registry.setAntiLog(true);
+    ledInitialized = true;
+  }
+
+  updateStrips(registry.getStrips());
+}
+
+
+float time    = 0;
+int   pixelId = 0;
+
+void updateStrips(List<Strip> strips)
+{
+  time += 0.05f;
+  
+
+  int totalCount = 0;
+  int stripCount = min(strips.size(), 2);
+
+  ++pixelId;
+  
+  for(int stripIdx = 0; stripIdx < stripCount; ++stripIdx) {
+    Strip strip = strips.get(stripIdx);      
+    for (int i=0; i<strip.getLength(); ++i) {
+      
+      calibrationBehavior(strip, i, totalCount);
+      //defaultBehavior(strip, i);
+      ++totalCount;
+    }
+  }
+
+  if (pixelId >= totalCount)
+     pixelId = -1;
+}
+
+void calibrationBehavior(Strip strip, int i, int globalIdx)
+{
+  if (pixelId == globalIdx) strip.setPixel(color(1,1,1), i);
+  else                      strip.setPixel(color(0,0,0), i);
+}
+
+void defaultBehavior(Strip strip, int i)
+{
+  if (treeData.treeOn)
   {
-    if (!ledInitialized) {
-      registry.startPushing();
-      registry.setExtraDelay(0);
-      registry.setAutoThrottle(true);
-      registry.setAntiLog(true);
-      ledInitialized = true;
+    if (random(0,1) < 0.001f) {
+      strip.setPixel(treeData.treeSparkleColor, i);
+    } else {
+      float b = treeData.brightness;
+      color c = color(red  (treeData.treeBaseColor) * b,
+                      green(treeData.treeBaseColor) * b,
+                      blue (treeData.treeBaseColor) * b);
+      
+      strip.setPixel(c, i);
     }
-
-    List<Strip> strips = registry.getStrips();
-    
-
-    time += 0.05f;
-    ++pixelId;
-    int totalCount = 0;
-    int stripCount = min(strips.size(), 2);
-    for(int stripIdx = 0; stripIdx < stripCount; ++stripIdx) {
-      Strip strip = strips.get(stripIdx);      
-      for (int i=0; i<strip.getLength(); ++i) {
-        //if(pixelId == totalCount)
-        
-        if (treeData.treeOn)
-        {
-          if (random(0,1) < 0.001f) {
-            strip.setPixel(treeData.treeSparkleColor, i);
-          } else {
-            float b = treeData.brightness;
-            
-            color c = color(red(treeData.treeBaseColor) * b,
-                            green(treeData.treeBaseColor) * b,
-                            blue(treeData.treeBaseColor) * b);
-            
-            strip.setPixel(c, i);
-          }
-        }
-        else
-        {
-          strip.setPixel(color(0,0,0), i);
-        }
-        
-        //else
-        //  strip.setPixel(color(0,0,0), i);
-        //float ang = totalCount * 0.01 + time;
-        //int r = (int)(sin(ang) * 128+128);
-        //int g = (int)(sin(ang*2) * 128+128);
-        //int b = (int)(sin(ang*3) * 128+128);
-        //strip.setPixel(color(r,g,b), i);
-          
-        ++totalCount;
-      }
-    }
-    
-    if (pixelId >= totalCount)
-      pixelId = -1;
+  }
+  else
+  {
+    strip.setPixel(color(0,0,0), i);
   }
 }
+
 
 public static class TreeData implements Serializable
 {
@@ -125,10 +137,10 @@ public static class TreeData implements Serializable
   public boolean treeOn;
 }
 
-String fileDataPath;
+String   fileDataPath;
 TreeData treeData = new TreeData();
-float masterR, masterG, masterB;
-int activeColorIndex = 0;
+float    masterR, masterG, masterB;
+int      activeColorIndex = 0;
 
 void updateCol() {
   color col = color(masterR*255, masterG*255, masterB*255);
