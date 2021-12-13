@@ -85,8 +85,8 @@ void updateStrips(List<Strip> strips)
     Strip strip = strips.get(stripIdx);      
     for (int i=0; i<strip.getLength(); ++i) {
       
-      calibrationBehavior(strip, i, totalCount);
-      //defaultBehavior(strip, i);
+      //calibrationBehavior(strip, i, totalCount);
+      defaultBehavior(strip, i);
       ++totalCount;
     }
   }
