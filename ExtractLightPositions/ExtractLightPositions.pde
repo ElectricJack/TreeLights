@@ -8,11 +8,16 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.TreeMap;
 
+import oscP5.*;
+import netP5.*;
 
 import peasy.PeasyCam;
 
 
-PeasyCam cam;
+
+OscP5      oscP5;
+NetAddress treeAddress;
+PeasyCam   cam;
 
 
 String viewName           = "view0";
@@ -65,6 +70,9 @@ void setup()
   size(1600,800, P3D);
   
   cam = new PeasyCam(this, 100);
+  oscP5 = new OscP5(this,12000);
+  treeAddress = new NetAddress("192.168.1.122",12000);
+
     
   // Load and init all values
   for(int i=0; i<4; ++i) {
@@ -137,18 +145,12 @@ void setup()
   viewPos[3] = new PVector(180*cos(a2),60,180*sin(a2));
   
   solveLightPositions();
+  
+  frameRate(30);
 }
 
 
-/*
-PVector cameraRay(PVector cameraPos, PVector lightPos)
-{
-  var from = cameraPos.get();
-  from.mult(-1);
-  
-  var rotMatrix = new PMatrix3D();
-  rotMatrix.rotateX(21 / 2.0f);
-}*/
+
 
 class SolvedLight
 {
@@ -249,15 +251,49 @@ void draw()
   }
   
   
+  int selectedLight = -1;///(int)map(mouseX, 0, width, 0, 512);
+  float closestDist = 999999.0f;
   
-  fill(0,255,0);
   for (int i=0; i<solvedLights.size(); ++i) {
     var light = solvedLights.get(i);
+    var x = screenX(light.position.x,light.position.y,light.position.z);
+    var y = screenY(light.position.x,light.position.y,light.position.z);
+    
+    var diff = new PVector(mouseX-x,mouseY-y);
+    var dist = diff.mag();
+    if (dist < closestDist) {
+      closestDist = dist;
+      selectedLight = light.index;
+    }
+  }
+  
+  
+  
+  for (int i=0; i<solvedLights.size(); ++i) {
+    var light = solvedLights.get(i);
+    
+    float s = 1;
+    if (selectedLight == light.index ) {
+      fill(255,255,255);
+      s = 3;
+    } else {
+      fill(0,64,0);
+    }
+    
     pushMatrix();
       translate(light.position.x,light.position.y,light.position.z);
-      box(1);
+      box(s);
     popMatrix();
   }
+  
+  /* in the following different ways of creating osc messages are shown by example */
+  OscMessage myMessage = new OscMessage("/select");
+  
+  //map(mouseX, 0, 512);
+  myMessage.add(selectedLight); 
+
+  /* send the message */
+  oscP5.send(myMessage, treeAddress); 
 }
 
 
@@ -429,8 +465,6 @@ LightInfo getViewInfoAtFrame(int viewIndex, int frameIndex) {
     
   return lookup.get(frameIndex);
 }
-
-
 
 
 
