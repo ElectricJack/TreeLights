@@ -69,8 +69,9 @@ void draw()
 }
 
 
-float time    = 0;
-int   pixelId = 0;
+float time        = 0;
+int   pixelId     = 0;
+int   selectedIdx = 0;
 
 void updateStrips(List<Strip> strips)
 {
@@ -86,7 +87,9 @@ void updateStrips(List<Strip> strips)
     for (int i=0; i<strip.getLength(); ++i) {
       
       //calibrationBehavior(strip, i, totalCount);
-      defaultBehavior(strip, i);
+      //defaultBehavior(strip, i);
+      highlightSelected(strip, i, totalIdx);
+
       ++totalCount;
     }
   }
@@ -96,6 +99,11 @@ void updateStrips(List<Strip> strips)
     ++pixelId;
 }
 
+void highlightSelected(Strip strip, int i, globalIdx)
+{
+  color col = globalIdx == selectedIdx? color(255,255,255) : color(0,0,0);
+  strip.setPixel(col, i);
+}
 
 
 int startFrame = -1;
@@ -213,5 +221,8 @@ void oscEvent(OscMessage msg) {
       treeData.treeOn = !treeData.treeOn;
       saveValues();
     }
+  }
+  else if (msgPattern.equals("/select"))  {
+    selectedIdx = (int)msg.get(0).intValue();
   }
 }
