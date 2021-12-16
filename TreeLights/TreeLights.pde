@@ -99,7 +99,7 @@ void updateStrips(List<Strip> strips)
     ++pixelId;
 }
 
-void highlightSelected(Strip strip, int i, globalIdx)
+void highlightSelected(Strip strip, int i, int globalIdx)
 {
   color col = globalIdx == selectedIdx? color(255,255,255) : color(0,0,0);
   strip.setPixel(col, i);
