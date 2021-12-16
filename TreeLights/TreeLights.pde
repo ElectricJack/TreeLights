@@ -88,7 +88,7 @@ void updateStrips(List<Strip> strips)
       
       //calibrationBehavior(strip, i, totalCount);
       //defaultBehavior(strip, i);
-      highlightSelected(strip, i, totalIdx);
+      highlightSelected(strip, i, totalCount);
 
       ++totalCount;
     }
