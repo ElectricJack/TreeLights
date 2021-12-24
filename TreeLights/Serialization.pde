@@ -7,9 +7,9 @@ void saveTreeData() { saveValues(treeDataPath, treeData); }
 void saveStripConfig() {
   List<Strip> strips = registry.getStrips();
 
-  var stripData = new LightStripData();
+  LightStripData stripData = new LightStripData();
   for(int i=0; i<strips.size(); ++i) {
-    var strip = strips.get(i);
+    LightStripData strip = strips.get(i);
     stripData.stripLengths.add(strip.getLength());
   }
 
