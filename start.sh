@@ -1,2 +1,2 @@
 #!/bin/bash
-DISPLAY=:0 ~/processing-3.5.3/processing-java --sketch=/home/pi/TreeLights/TreeLights --present > /dev/null &
+DISPLAY=:0 ~/processing-4.0b2/processing-java --sketch=/home/pi/TreeLights/TreeLights --present > /dev/null &
