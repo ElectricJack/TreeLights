@@ -9,7 +9,7 @@ void saveStripConfig() {
 
   LightStripData stripData = new LightStripData();
   for(int i=0; i<strips.size(); ++i) {
-    LightStripData strip = strips.get(i);
+    Strip strip = strips.get(i);
     stripData.stripLengths.add(strip.getLength());
   }
 
