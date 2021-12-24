@@ -31,8 +31,12 @@ class LEDObserver implements Observer {
   }
 }
 
-boolean ledInitialized = false;
-OscP5   oscP5 = null;
+boolean  ledInitialized = false;
+OscP5    oscP5          = null;
+String   treeDataPath;
+String   stripDataPath;
+
+
 
 void setup()
 {
@@ -43,9 +47,10 @@ void setup()
   ledObserver      = new LEDObserver();
   registry.addObserver(ledObserver);
   
-  fileDataPath = sketchPath("values.dat");
-  println(fileDataPath);
-  loadValues();
+  treeDataPath  = sketchPath("values.dat");
+  stripDataPath = sketchPath("strips.dat");
+  
+  loadTreeData();
   
   frameRate(30);
 }
@@ -63,6 +68,8 @@ void draw()
     registry.setAutoThrottle(true);
     registry.setAntiLog(true);
     ledInitialized = true;
+
+    saveStripConfig();
   }
 
   updateStrips(registry.getStrips());
@@ -148,20 +155,10 @@ void defaultBehavior(Strip strip, int i)
 }
 
 
-public static class TreeData implements Serializable
-{
-  private static final long serialVersionUID = 1L;
-  
-  public int     treeBaseColor;
-  public int     treeSparkleColor;
-  public int     treeColorA;
-  public int     treeColorB;
-  public int     treeColorC;
-  public float   brightness = 1.0f;
-  public boolean treeOn;
-}
 
-String   fileDataPath;
+
+
+
 TreeData treeData = new TreeData();
 float    masterR, masterG, masterB;
 int      activeColorIndex = 0;
@@ -175,37 +172,11 @@ void updateCol() {
   else if (activeColorIndex == 3) treeData.treeColorB       = col;
   else if (activeColorIndex == 4) treeData.treeColorC       = col;
   
-  saveValues();
+  saveTreeData();
 }
 
-// Turn tree off, turn tree on
-// Turn off at time, turn on at time
-// Sparkle
 
 
-
-void loadValues()
-{
-  if (!new File(fileDataPath).exists())
-    return;
-    
-  try {
-    ObjectInputStream objectInputStream = new ObjectInputStream(new BufferedInputStream(new FileInputStream(fileDataPath)));
-    treeData = (TreeData)objectInputStream.readObject();
-    objectInputStream.close();
-  } catch( Exception e ) {}
-}
-void saveValues()
-{
-    try {
-      ObjectOutputStream objectOutputStream = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(fileDataPath)));
-      objectOutputStream.writeObject(treeData);
-      objectOutputStream.close();
-    } catch(IOException e) {
-      println("Saving failed");
-      println(e);
-    }
-}
 
 void oscEvent(OscMessage msg) {
   String msgPattern = msg.addrPattern();
@@ -213,13 +184,13 @@ void oscEvent(OscMessage msg) {
   if      (msgPattern.equals("/master/red"))   { masterR = msg.get(0).floatValue(); updateCol(); }
   else if (msgPattern.equals("/master/green")) { masterG = msg.get(0).floatValue(); updateCol(); }
   else if (msgPattern.equals("/master/blue"))  { masterB = msg.get(0).floatValue(); updateCol(); }
-  else if (msgPattern.equals("/master/level")) { treeData.brightness = msg.get(0).floatValue(); saveValues(); }
+  else if (msgPattern.equals("/master/level")) { treeData.brightness = msg.get(0).floatValue(); saveTreeData(); }
   else if (msgPattern.equals("/fx/a/fx"))  {
     int index = (int)msg.get(0).floatValue();
     if (index <= 4) activeColorIndex = index;
     else if (index == 17) {
       treeData.treeOn = !treeData.treeOn;
-      saveValues();
+      saveTreeData();
     }
   }
   else if (msgPattern.equals("/select"))  {
