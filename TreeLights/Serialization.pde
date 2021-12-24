@@ -1,6 +1,11 @@
 
 
-void loadTreeData() { treeData = (TreeData)loadValues(treeDataPath); }
+void loadTreeData() { 
+  treeData = (TreeData)loadValues(treeDataPath);
+  if (treeData == null) {
+    treeData = new TreeData();
+  }
+}
 void saveTreeData() { saveValues(treeDataPath, treeData); }
 
 
