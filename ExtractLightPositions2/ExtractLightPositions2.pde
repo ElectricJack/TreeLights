@@ -29,6 +29,11 @@ PeasyCam      cam;
 PFont         uiFont;
 StateMachine  mainStateMachine;
 
+// Generate an animation for the lights
+
+String lightPositionDataPath;
+String getViewDataPath(int i) { return sketchPath("../ViewData/view"+i+".data"); }
+
 
 void setup() {
   size(1600,800, P3D);
@@ -37,7 +42,9 @@ void setup() {
   oscP5       = new OscP5(this,12000);
   treeAddress = new NetAddress("192.168.1.122",12000);
   uiFont      = loadFont("SansSerif-48.vlw");
-
+  
+  lightPositionDataPath = sketchPath("../lightPositions.dat");
+  
 
   mainStateMachine = new StateMachine();
   
@@ -51,6 +58,7 @@ void setup() {
     .addTransition("compute3", "FrameAnalysis3")
     .addTransition("analyze",  "DataAnalysis")
     .addTransition("compute",  "ComputeLights")
+    .addTransition("animate",  "ExportAnimations")
   );
   
   mainStateMachine.add(
@@ -85,7 +93,10 @@ void setup() {
   mainStateMachine.add(
     new StateComputeLights("ComputeLights").then("Menu")
   );
-  
+
+  mainStateMachine.add(
+    new StateExportAnimations("ExportAnimations").then("Menu")
+  );
 }
 
 void draw() {

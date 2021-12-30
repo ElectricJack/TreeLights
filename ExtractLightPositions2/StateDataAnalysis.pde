@@ -18,7 +18,7 @@ class StateViewSolver extends BaseState
   public void enter()  {
     // Load and init all values
     for(int i=0; i<4; ++i) {
-      var view = (ArrayList<LightInfo>)loadValues(sketchPath("../ViewData/view"+i+".data"));
+      var view = (ArrayList<LightInfo>)loadValues(getViewDataPath(i));
       views.add(view);
       var lookup = new TreeMap<Integer, LightInfo>();
       viewByFrame.add(lookup);

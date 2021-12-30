@@ -1,15 +1,10 @@
 
 
+
 class StateComputeLights extends StateViewSolver
 {
   
-  
-  class SolvedLight
-  {
-    int     index;
-    PVector position;
-  }
-  ArrayList<SolvedLight> solvedLights = new ArrayList<SolvedLight>();
+  ArrayList<SolvedLightPos> solvedLights = new ArrayList<SolvedLightPos>();
 
   StateComputeLights(String name) {
     super(name);
@@ -146,7 +141,7 @@ class StateComputeLights extends StateViewSolver
         directions.add(dir);
       }
       
-      var newLight = new SolvedLight();
+      var newLight = new SolvedLightPos();
       newLight.index = (int)(activeSolve.frame / 4);
       newLight.position = findNearestPoint(
         points.toArray(new PVector[points.size()]), 
@@ -157,5 +152,6 @@ class StateComputeLights extends StateViewSolver
     }
     
     println("Total found lights: " + solvedLights.size());
+    saveValues(lightPositionDataPath, solvedLights);
   }
 }

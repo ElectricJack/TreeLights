@@ -45,7 +45,11 @@ class StateMenu extends BaseState
       trigger("compute");
     }
     
-    
+    translate(0,40);
+    var lightPosDataExists = new File(lightPositionDataPath).exists();
+    if (button("Export Light Animation", 120, lightPosDataExists)) {
+      trigger("animate");
+    }    
     
     cam.endHUD();
   }
