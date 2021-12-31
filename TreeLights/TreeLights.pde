@@ -94,8 +94,8 @@ void updateStrips(List<Strip> strips)
     for (int i=0; i<strip.getLength(); ++i) {
       
       //calibrationBehavior(strip, i, totalCount);
-      defaultBehavior(strip, i);
-      //highlightSelected(strip, i, totalCount);
+      //defaultBehavior(strip, i);
+      highlightSelected(strip, i, totalCount);
 
       ++totalCount;
     }
