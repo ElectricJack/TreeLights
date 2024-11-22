@@ -6,19 +6,8 @@ void loadTreeData() {
     treeData = new TreeData();
   }
 }
-void saveTreeData() { saveValues(treeDataPath, treeData); }
-
-
-void saveStripConfig() {
-  List<Strip> strips = registry.getStrips();
-
-  //LightStripData stripData = new LightStripData();
-  //for(int i=0; i<strips.size(); ++i) {
-  //  Strip strip = strips.get(i);
-  //  stripData.stripLengths.add(strip.getLength());
-  //}
-
-  //saveValues(stripDataPath, stripData);
+void saveTreeData() { 
+  saveValues(treeDataPath, treeData);
 }
 
 

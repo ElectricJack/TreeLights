@@ -68,8 +68,6 @@ void draw()
     registry.setAutoThrottle(true);
     registry.setAntiLog(true);
     ledInitialized = true;
-
-    saveStripConfig();
   }
 
   updateStrips(registry.getStrips());
@@ -93,8 +91,8 @@ void updateStrips(List<Strip> strips)
     Strip strip = strips.get(stripIdx);      
     for (int i=0; i<strip.getLength(); ++i) {
       
-      //calibrationBehavior(strip, i, totalCount);
-      defaultBehavior(strip, i);
+      calibrationBehavior(strip, i, totalCount);
+      //defaultBehavior(strip, i);
       //highlightSelected(strip, i, totalCount);
 
       ++totalCount;
