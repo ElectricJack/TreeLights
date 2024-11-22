@@ -19,6 +19,13 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+// Audio playback
+Minim       minim;
+AudioPlayer player;
+
+
+// TrackModel instance (Active track data)
+TrackModel     trackModel;
 
 // Pixel pusher -----------
 DeviceRegistry registry;
@@ -41,7 +48,8 @@ String   stripDataPath;
 void setup()
 {
   size(100,100,P3D);
-  
+
+  minim            = new Minim(this);  
   oscP5            = new OscP5(this,12000);
   registry         = new DeviceRegistry();
   ledObserver      = new LEDObserver();
@@ -51,11 +59,29 @@ void setup()
   stripDataPath = sketchPath("strips.dat");
   
   loadTreeData();
+
+
+  // Initialize TrackModel
+  trackModel = new TrackModel();
+
+  // Set default active audio track
+  trackModel.activeAudioTrack = "music/Christmas-is-coming-Long-Version.mp3";
+
+  // Load the default audio track
+  loadAudioTrack(trackModel.activeAudioTrack);
+
   
   frameRate(30);
 }
 
-
+void loadAudioTrack(String trackFile) {
+  if (player != null) {
+    player.close();
+  }
+  player = minim.loadFile(sketchPath(trackFile), 2048);
+  player.setGain(0.25)
+  //player.pause();
+}
 
 void draw()
 {
