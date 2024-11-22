@@ -80,6 +80,7 @@ void loadAudioTrack(String trackFile) {
   }
   player = minim.loadFile(sketchPath(trackFile), 2048);
   player.setGain(0.25);
+  player.play();
   //player.pause();
 }
 
