@@ -118,9 +118,10 @@ void updateStrips(List<Strip> strips)
     Strip strip = strips.get(stripIdx);      
     for (int i=0; i<strip.getLength(); ++i) {
       
-      calibrationBehavior(strip, i, totalCount);
+      //calibrationBehavior(strip, i, totalCount);
       //defaultBehavior(strip, i);
       //highlightSelected(strip, i, totalCount);
+      testBehavior(strip, i);
 
       ++totalCount;
     }
@@ -179,6 +180,14 @@ void defaultBehavior(Strip strip, int i)
   }
 }
 
+
+void testBehavior(Strip strip, int i)
+{  
+  float hue = (sin(time + i / 20.0f) + 1) / 2.0;
+  colorMode(HSB,1);
+  color c = color(hue, 1, 1);  
+  strip.setPixel(c, i);
+}
 
 
 
