@@ -52,8 +52,10 @@ void setup()
   minim            = new Minim(this);  
   oscP5            = new OscP5(this,12000);
   registry         = new DeviceRegistry();
+
   ledObserver      = new LEDObserver();
   registry.addObserver(ledObserver);
+  
   
   treeDataPath  = sketchPath("values.dat");
   stripDataPath = sketchPath("strips.dat");
@@ -95,8 +97,18 @@ void draw()
     registry.setAutoThrottle(true);
     registry.setAntiLog(true);
     ledInitialized = true;
-  }
+    List<PixelPusher> pushers = registry.getPushers();
+    println("Number pushers found: "+pushers.size());
+    
+    List<Strip> strips = registry.getStrips();
+    println("Number strips found: "+strips.size());
+    
+    if(strips.size() > 0) {
+      println("Strip(0) length: "+strips.get(0).getLength());
+    }
 
+  }
+  
   updateStrips(registry.getStrips());
 }
 
