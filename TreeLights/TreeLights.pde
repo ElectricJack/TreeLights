@@ -6,9 +6,12 @@
 import netP5.*;
 import oscP5.*;
 
+
 import java.util.*;
 import com.heroicrobot.dropbit.registry.*;
 import com.heroicrobot.dropbit.devices.pixelpusher.*;
+
+import processing.serial.*;
 
 import java.io.Serializable;
 import java.io.BufferedInputStream;
@@ -22,6 +25,7 @@ import java.io.ObjectOutputStream;
 // Audio playback
 Minim       minim;
 AudioPlayer player;
+Serial      dmxSerial;
 
 
 // TrackModel instance (Active track data)
@@ -72,8 +76,34 @@ void setup()
   // Load the default audio track
   loadAudioTrack(trackModel.activeAudioTrack);
 
+
+  // List all the available serial ports
+  println(Serial.list());
+
+  // Find the serial port connected to the USB interface
+  String portName = findDMXSerialPort();
+
+  if (portName != null) {
+    // Open the serial port with DMX-specific settings
+    dmxSerial = new Serial(this, portName, 250000, 'N', 8, 2.0);
+    println("DMX serial port opened on " + portName);
+  } else {
+    println("DMX serial port not found.");
+    //exit();
+  }
+
   
-  frameRate(30);
+  frameRate(60);
+}
+
+String findDMXSerialPort() {
+  String[] portNames = Serial.list();
+  for (String port : portNames) {
+    if (port.contains("ttyUSB") || port.contains("ttyACM")) {
+      return port;
+    }
+  }
+  return null;
 }
 
 void loadAudioTrack(String trackFile) {
@@ -85,6 +115,11 @@ void loadAudioTrack(String trackFile) {
   player.play();
   //player.pause();
 }
+
+
+float time        = 0;
+int   pixelId     = 0;
+int   selectedIdx = 0;
 
 void draw()
 {
@@ -110,12 +145,16 @@ void draw()
   }
   
   updateStrips(registry.getStrips());
+  
+  // Test DMX
+  float panAngle = sin(time)*0.5 + 0.5;
+  float tiltAngle = cos(time)*0.5 + 0.5;
+  setPanTiltWashData(0, panAngle, tiltAngle, color(1,0,0));
+  sendDMX();
 }
 
 
-float time        = 0;
-int   pixelId     = 0;
-int   selectedIdx = 0;
+
 
 void updateStrips(List<Strip> strips)
 {
@@ -241,5 +280,69 @@ void oscEvent(OscMessage msg) {
   }
   else if (msgPattern.equals("/select"))  {
     selectedIdx = (int)msg.get(0).intValue();
+  }
+}
+
+
+void setPanTiltWashData(int startAddress, float panAngle, float tiltAngle, color lightColor) {
+    // This is a very basic output of our parameters to
+    //  an LIXDA pan/tilt wash in 14 channel mode.
+    
+    int pan = (int)(constrain(panAngle, 0,1) * 0xFFFF);
+    int panHigh = (pan >> 8) & 0xFF;
+    int panLow =  pan & 0xFF;
+    
+    int tilt = (int)(constrain(tiltAngle, 0,1) * 0xFFFF);
+    int tiltHigh = (tilt >> 8) & 0xFF;
+    int tiltLow =  tilt & 0xFF;
+
+    dmxData[startAddress+0] = panHigh;
+    dmxData[startAddress+1] = panLow;
+    dmxData[startAddress+2] = tiltHigh;
+    dmxData[startAddress+3] = tiltLow;
+    
+    int panTiltSpeed = 0; // 0 is the fastest, 255 the slowest
+    //dmxOutput.set(startAddress+4, );
+    dmxData[startAddress+4] = panTiltSpeed;
+    
+    
+    //@TODO
+    // off 0-7
+    // dim 8-134
+    // strobe 135-239;
+    int dimStrobe = 240; 
+    dmxData[startAddress+5] = dimStrobe;
+    
+    
+    int red   = (int)red(lightColor);
+    int green = (int)green(lightColor);
+    int blue  = (int)blue(lightColor);
+    int white = (int)((255.0f-saturation(lightColor)) * (brightness(lightColor) / 255.0));
+    
+    dmxData[startAddress+6] = red;
+    dmxData[startAddress+7] = green; 
+    dmxData[startAddress+8] = blue;
+    dmxData[startAddress+9] = white;
+   
+    dmxData[startAddress+10] = 0; 
+    dmxData[startAddress+11] = 0;
+    dmxData[startAddress+12] = 0;
+    dmxData[startAddress+13] = 0;
+}
+   
+
+int[] dmxData = new int[512];
+
+void sendDMX() {
+  if (dmxSerial != null) {
+    // Build DMX packet
+    byte[] packet = new byte[dmxData.length + 1];
+    packet[0] = 0; // Start code (0 for DMX)
+    for (int i = 0; i < dmxData.length; i++) {
+      packet[i + 1] = (byte) (dmxData[i] & 0xFF);
+    }
+
+    // Send DMX packet
+    dmxSerial.write(packet);
   }
 }
