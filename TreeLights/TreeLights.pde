@@ -123,12 +123,12 @@ void updateStrips(List<Strip> strips)
   
 
   int totalCount = 0;
-  int stripCount = min(strips.size(), 2);
+  int stripCount = strips.size();
 
   
   for(int stripIdx = 0; stripIdx < stripCount; ++stripIdx) {
     Strip strip = strips.get(stripIdx);      
-    for (int i=0; i<strip.getLength(); ++i) {
+    for (int i=0; i<strip.getLength() && i < 50; ++i) {
       
       //calibrationBehavior(strip, i, totalCount);
       //defaultBehavior(strip, i);
